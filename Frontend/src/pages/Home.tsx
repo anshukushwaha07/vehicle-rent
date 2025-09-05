@@ -6,8 +6,10 @@ import { Card } from "@/components/ui/card";
 const Home: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold mb-4">Your Journey, Your Car.</h1>
-      <h2 className="text-xl mb-8">
+      <h1 className=" font-raleway text-4xl font-bold mb-4">
+        Your Journey, Your Car.
+      </h1>
+      <h2 className=" font-raleway text-xl mb-8">
         Fast, easy, and affordable car rentals at your fingertips.
       </h2>
       <Input placeholder="Enter your location" className="mb-4" />

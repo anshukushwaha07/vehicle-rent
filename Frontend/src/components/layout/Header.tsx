@@ -5,14 +5,14 @@ export default function Header() {
     <header className="w-full border-b bg-white">
       <div className="container mx-auto flex items-center justify-between py-4">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold">
-          🚗 CarRent
+        <Link to="/" className=" font-raleway text-2xl font-bold text-blue-600">
+          DriveHive
         </Link>
 
         {/* Navigation */}
         <nav className="flex gap-6">
           <Link to="/cars" className="hover:text-blue-600">
-            Cars
+            vehicles
           </Link>
           <Link to="/bookings" className="hover:text-blue-600">
             Bookings
