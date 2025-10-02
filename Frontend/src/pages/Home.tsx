@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   ArrowRight,
   PlayCircle,
@@ -136,8 +136,8 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background flex items-center justify-center font-sans">
-      <main className="container max-w-7xl mx-auto px-6 py-8 mt-24 mb-8 bg-card rounded-4xl shadow-lg relative">
+    <div id="home" className="min-h-screen w-full bg-background flex items-center justify-center font-sans">
+      <main id="models" className="container max-w-7xl mx-auto px-6 py-8 mt-12 md:mt-16 mb-8 bg-card rounded-4xl shadow-lg relative">
         <div className="grid grid-cols-12 gap-8 items-center relative z-10">
           <div className="col-span-1 flex flex-col items-center gap-6">
             {vehicleData.map((vehicle) => (
@@ -255,6 +255,7 @@ const Home: React.FC = () => {
         </div>
 
         <div
+          id="services"
           className={`mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center border-t border-border pt-12 transition-opacity duration-200 ${
             isFading ? "opacity-0" : "opacity-100"
           }`}
@@ -271,6 +272,7 @@ const Home: React.FC = () => {
           ))}
         </div>
       </main>
+      <div id="gallery" />
     </div>
   );
 };

@@ -1,65 +1,40 @@
 @import "tailwindcss";
-@import "tailwindcss";
 
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-Thin.ttf") format("truetype");
-  font-weight: 100;
-  font-style: normal;
+:root {
+  --color-primary: 59 130 246;
+  --color-primary-foreground: 255 255 255;
+  --color-secondary: 241 245 249;
+  --color-secondary-foreground: 15 23 42;
+  --color-background: 255 255 255;
+  --color-foreground: 15 23 42;
+  --color-card: 255 255 255;
+  --color-card-foreground: 15 23 42;
+  --color-muted: 241 245 249;
+  --color-muted-foreground: 100 116 139;
+  --color-accent: 241 245 249;
+  --color-accent-foreground: 15 23 42;
+  --color-border: 226 232 240;
 }
 
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-ExtraLight.ttf") format("truetype");
-  font-weight: 200;
-  font-style: normal;
+.dark {
+  --color-primary: 147 197 253;
+  --color-primary-foreground: 15 23 42;
+  --color-secondary: 51 65 85;
+  --color-secondary-foreground: 248 250 252;
+  --color-background: 15 23 42;
+  --color-foreground: 248 250 252;
+  --color-card: 30 41 59;
+  --color-card-foreground: 248 250 252;
+  --color-muted: 51 65 85;
+  --color-muted-foreground: 148 163 184;
+  --color-accent: 51 65 85;
+  --color-accent-foreground: 248 250 252;
+  --color-border: 51 65 85;
 }
 
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-SemiBold.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-ExtraBold.ttf") format("truetype");
-  font-weight: 800;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Raleway";
-  src: url("../src/assets/fonts/Raleway-Black.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
+@layer base {
+  body {
+    background-color: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+  }
 }

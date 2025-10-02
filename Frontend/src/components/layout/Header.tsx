@@ -1,246 +1,121 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { NavLink, Link } from "react-router-dom";
-import { Search, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeProvider";
 
 // Define navigation links in an array for easier management
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/model", label: "Models" },
-  { href: "/services", label: "Services" },
-  { href: "/gallery", label: "Gallery" },
+  { href: "#home", label: "Home" },
+  { href: "#models", label: "Models" },
+  { href: "#services", label: "Services" },
+  { href: "#gallery", label: "Gallery" },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [visible, setVisible] = useState(true);
+  const { theme, setTheme } = useTheme();
+  const activeTheme = theme === "dark" ? "dark" : "light";
 
-  // FIXED: Use useRef to track last scroll position to avoid stale state in the event listener
-  const lastScrollYRef = useRef(0);
-  const scrollTimeout = useRef<number | null>(null);
-
-  // FIXED: The controlHeader logic is updated to use the ref
-  const controlHeader = useCallback(() => {
-    const currentScrollY = window.scrollY;
-
-    if (scrollTimeout.current) {
-      clearTimeout(scrollTimeout.current);
-    }
-
-    // Hide header on scroll down, show on scroll up
-    if (currentScrollY > lastScrollYRef.current && currentScrollY > 100) {
-      setVisible(false);
-    } else {
-      setVisible(true);
-    }
-
-    // Set a timeout to make the header visible when scrolling stops
-    scrollTimeout.current = window.setTimeout(() => {
-      setVisible(true);
-    }, 200);
-
-    // Update the ref with the new scroll position
-    lastScrollYRef.current = currentScrollY;
-  }, []); // FIXED: Dependency array is now empty
-
-  useEffect(() => {
-    window.addEventListener("scroll", controlHeader);
-    return () => {
-      window.removeEventListener("scroll", controlHeader);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-    };
-  }, [controlHeader]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsSearchOpen(false);
-      }
-    };
-    if (isSearchOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isSearchOpen]);
-
-  useEffect(() => {
-    if (menuOpen || isSearchOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [menuOpen, isSearchOpen]);
-
-  const navLinkClasses =
-    "text-muted-foreground hover:text-primary transition-colors duration-300";
-  const activeNavLinkClasses = "text-primary font-semibold";
+  // Simplified theme switcher function
+  const switchTheme = (value: "light" | "dark") => {
+    setTheme(value);
+    setMenuOpen(false);
+  };
 
   return (
-    <header
-      className={`w-full fixed top-0 left-0 z-50 pt-6 md:pt-8 transition-transform duration-300 ease-in-out ${
-        visible ? "translate-y-0" : "-translate-y-full"
-      }`}
-    >
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="relative bg-card/80 backdrop-blur-sm rounded-2xl shadow-sm flex items-center justify-between py-4 px-6 md:px-8">
-          <div
-            className={`flex-1 flex items-center justify-start transition-opacity duration-300 ${
-              isSearchOpen ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <Link
-              to="/"
-              onClick={() => setMenuOpen(false)}
-              className="font-bold text-2xl tracking-[0.2em] text-primary"
-            >
-              VROOM
-            </Link>
-          </div>
-
-          <nav
-            className={`hidden md:flex items-center gap-8 lg:gap-10 transition-opacity duration-300 ${
-              isSearchOpen ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.href}
-                to={link.href}
-                className={({ isActive }) =>
-                  `${navLinkClasses} ${isActive ? activeNavLinkClasses : ""}`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
-
-          <div
-            className={`flex-1 flex items-center justify-end gap-2 sm:gap-4 transition-opacity duration-300 ${
-              isSearchOpen ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <button
-              aria-label="Open Search"
-              className="p-2.5 border rounded-full hover:bg-accent transition-colors"
-              onClick={() => setIsSearchOpen(true)}
-            >
-              <Search className="w-5 h-5 text-primary" />
-            </button>
-
-            {/* ADDED: Log In button */}
-            <Link
-              to="/login"
-              className="hidden sm:block text-primary rounded-full px-6 py-2.5 hover:bg-accent transition font-medium text-sm"
-            >
-              Log In
-            </Link>
-
-            <Link
-              to="/signup"
-              className="hidden sm:block bg-primary text-primary-foreground rounded-full px-6 py-2.5 hover:bg-primary/90 transition font-medium text-sm"
-            >
-              Sign Up
-            </Link>
-
-            <button
-              className="md:hidden p-2 rounded-full hover:bg-accent"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-expanded={menuOpen}
-              aria-label="Toggle navigation menu"
-            >
-              {menuOpen ? (
-                <X className="w-6 h-6 text-primary" />
-              ) : (
-                <Menu className="w-6 h-6 text-primary" />
-              )}
-            </button>
-          </div>
-
-          <div
-            className={`absolute inset-0 flex items-center px-6 transition-opacity duration-300 ${
-              isSearchOpen
-                ? "opacity-100 z-20"
-                : "opacity-0 pointer-events-none"
-            }`}
-          >
-            <div className="w-full flex items-center bg-accent/80 rounded-full">
-              <span className="pl-4 pr-2">
-                <Search className="w-5 h-5 text-muted-foreground" />
-              </span>
-              <input
-                type="text"
-                placeholder="Search for a vehicle..."
-                className="w-full bg-transparent outline-none border-none py-3 text-base text-foreground"
-                autoFocus
-              />
-              <button
-                aria-label="Close Search"
-                className="p-3 rounded-full hover:bg-muted/80 transition-colors"
-                onClick={() => setIsSearchOpen(false)}
-              >
-                <X className="w-6 h-6 text-muted-foreground" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`
-            absolute top-full left-0 w-full mt-2 transition-all duration-300 ease-in-out md:hidden
-            ${
-              menuOpen
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-4 pointer-events-none"
-            }
-          `}
+    <header className="fixed top-0 left-0 z-50 w-full border-b border-border/30 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a
+          href="#home"
+          className="text-2xl font-bold tracking-[0.3em] text-primary"
         >
-          <div className="bg-card/95 backdrop-blur-sm rounded-2xl shadow-lg mx-4 p-4">
-            <nav className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `px-4 py-3 rounded-lg text-lg transition-colors ${
-                      isActive
-                        ? "bg-primary/10 text-primary font-semibold"
-                        : "text-muted-foreground hover:bg-accent"
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-              <hr className="my-2 border-border" />
+          VROOM
+        </a>
 
-              {/* ADDED: Log In button for mobile menu */}
-              <Link
-                to="/login"
-                onClick={() => setMenuOpen(false)}
-                className="block text-center border border-primary text-primary rounded-lg px-6 py-3 hover:bg-primary hover:text-primary-foreground transition-colors duration-300 font-medium"
-              >
-                Log In
-              </Link>
+        <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-muted-foreground transition-colors duration-200 hover:text-primary"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
 
-              <Link
-                to="/signup"
-                onClick={() => setMenuOpen(false)}
-                className="block text-center bg-primary text-primary-foreground rounded-lg px-6 py-3 hover:bg-primary/90 transition font-medium"
-              >
-                Sign Up
-              </Link>
-            </nav>
+        <div className="flex items-center gap-3">
+          <div className="hidden rounded-full border border-border p-1 text-xs font-semibold md:flex">
+            <button
+              onClick={() => switchTheme("light")}
+              className={`rounded-full px-3 py-1 transition-colors ${
+                activeTheme === "light"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Light
+            </button>
+            <button
+              onClick={() => switchTheme("dark")}
+              className={`rounded-full px-3 py-1 transition-colors ${
+                activeTheme === "dark"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Dark
+            </button>
           </div>
+
+          <button
+            className="inline-flex items-center justify-center rounded-full border border-border p-2 md:hidden"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
+      </div>
+
+      <div
+        className={`md:hidden transition-all duration-200 ease-in-out ${
+          menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <nav className="mx-6 mb-4 flex flex-col gap-3 rounded-2xl border border-border bg-card/90 px-4 py-4 text-sm font-medium backdrop-blur">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
+              {link.label}
+            </a>
+          ))}
+          <div className="mt-3 flex rounded-full border border-border p-1 text-xs font-semibold">
+            <button
+              onClick={() => switchTheme("light")}
+              className={`flex-1 rounded-full px-3 py-1 transition-colors ${
+                activeTheme === "light"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Light
+            </button>
+            <button
+              onClick={() => switchTheme("dark")}
+              className={`flex-1 rounded-full px-3 py-1 transition-colors ${
+                activeTheme === "dark"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Dark
+            </button>
+          </div>
+        </nav>
       </div>
     </header>
   );

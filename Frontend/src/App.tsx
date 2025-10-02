@@ -1,19 +1,15 @@
-import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Header from "./components/layout/Header";
-import ColorTest from "./pages/ColorTest";
+import Header from './components/layout/Header'
+import Home from './pages/Home'
 
 function App() {
   return (
-    <>
+    <div className="min-h-screen bg-background text-foreground">
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/testColor" element={<ColorTest />} />
-      </Routes>
-    </>
-  );
+      <main className="pt-28 md:pt-32">
+        <Home />
+      </main>
+    </div>
+  )
 }
 
-export default App;
+export default App
