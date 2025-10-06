@@ -1,120 +1,67 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import { useTheme } from "../../contexts/ThemeProvider";
+import { Menu, X } from "lucide-react"; // Assuming lucide-react is installed in your project
 
-// Define navigation links in an array for easier management
+// Define navigation links to match the new design
 const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#models", label: "Models" },
-  { href: "#services", label: "Services" },
-  { href: "#gallery", label: "Gallery" },
+  { href: "#", label: "Ride" },
+  { href: "#", label: "Drive" },
+  { href: "#", label: "Business" },
+  { href: "#", label: "Help" },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const activeTheme = theme === "dark" ? "dark" : "light";
-
-  // Simplified theme switcher function
-  const switchTheme = (value: "light" | "dark") => {
-    setTheme(value);
-    setMenuOpen(false);
-  };
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full border-b border-border/30 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a
-          href="#home"
-          className="text-2xl font-bold tracking-[0.3em] text-primary"
-        >
-          VROOM
+    <header className="fixed top-0 left-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700/50">
+      <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+        <a href="#" className="text-2xl font-bold text-gray-800 dark:text-white">
+          MatteCar
         </a>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <a
-              key={link.href}
+              key={link.label}
               href={link.href}
-              className="text-muted-foreground transition-colors duration-200 hover:text-primary"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden rounded-full border border-border p-1 text-xs font-semibold md:flex">
-            <button
-              onClick={() => switchTheme("light")}
-              className={`rounded-full px-3 py-1 transition-colors ${
-                activeTheme === "light"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Light
-            </button>
-            <button
-              onClick={() => switchTheme("dark")}
-              className={`rounded-full px-3 py-1 transition-colors ${
-                activeTheme === "dark"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Dark
-            </button>
-          </div>
-
+        <div className="flex items-center gap-4">
+          <a href="#" className="hidden sm:block text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 font-medium transition-colors">
+            Log in
+          </a>
+          <a href="#" className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-600 transition-colors">
+            Sign up
+          </a>
+          
           <button
-            className="inline-flex items-center justify-center rounded-full border border-border p-2 md:hidden"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label="Toggle navigation"
+            className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 dark:text-gray-300 md:hidden"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle navigation menu"
           >
-            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
 
-      <div
-        className={`md:hidden transition-all duration-200 ease-in-out ${
-          menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <nav className="mx-6 mb-4 flex flex-col gap-3 rounded-2xl border border-border bg-card/90 px-4 py-4 text-sm font-medium backdrop-blur">
+      {/* Mobile Menu */}
+      <div className={`md:hidden ${menuOpen ? "block" : "hidden"}`}>
+        <nav className="px-2 pt-2 pb-4 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700/50">
           {navLinks.map((link) => (
             <a
-              key={link.href}
+              key={link.label}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 hover:bg-gray-50 dark:hover:text-white dark:hover:bg-gray-800"
             >
               {link.label}
             </a>
           ))}
-          <div className="mt-3 flex rounded-full border border-border p-1 text-xs font-semibold">
-            <button
-              onClick={() => switchTheme("light")}
-              className={`flex-1 rounded-full px-3 py-1 transition-colors ${
-                activeTheme === "light"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Light
-            </button>
-            <button
-              onClick={() => switchTheme("dark")}
-              className={`flex-1 rounded-full px-3 py-1 transition-colors ${
-                activeTheme === "dark"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Dark
-            </button>
-          </div>
         </nav>
       </div>
     </header>

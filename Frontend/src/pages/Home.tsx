@@ -1,280 +1,301 @@
-import React, { useState } from "react";
-import { Button } from "../components/ui/button";
-import {
-  ArrowRight,
-  PlayCircle,
-  ArrowLeft,
-  Car,
-  Bike,
-  Zap,
-  Rocket,
-} from "lucide-react";
+import  { useState } from 'react';
 
-const vehicleData = [
-  {
-    id: "car",
-    icon: Car,
-    modelName: "THE CULLINAN'S",
-    modelDescription: "TWIN-TURBO V-12",
-    tag: "• CULLINAN",
-    price: 8750.0,
-    mainHeading: "Rent Premium Cars Worldwide",
-    description:
-      "Experience unparalleled luxury and performance. Our fleet of premium cars is perfect for making a statement wherever you go.",
-    imageUrl:
-      "https://www.pngmart.com/files/22/Rolls-Royce-Wraith-PNG-Isolated-Photos.png",
-    stats: [
-      {
-        value: "7+ Years",
-        text: "In the premium car rental market, redefining luxury travel.",
-      },
-      {
-        value: "72+ Cars",
-        text: "A wide range of luxury cars to suit your sophisticated style.",
-      },
-      {
-        value: "€15M+",
-        text: "Our entire fleet is valued in euros, representing its premium quality.",
-      },
-    ],
-  },
-  {
-    id: "bike",
-    icon: Bike,
-    modelName: "THE PANIGALE V4",
-    modelDescription: "DESMOSEDICI STRADALE",
-    tag: "• DUCATI",
-    price: 2250.0,
-    mainHeading: "Ride Superbikes On Open Roads",
-    description:
-      "Feel the thrill and freedom. Our collection of superbikes is engineered for pure performance and adrenaline.",
-    imageUrl:
-      "https://www.pngarts.com/files/7/Ducati-Panigale-V4-PNG-Photo.png",
-    stats: [
-      {
-        value: "5+ Years",
-        text: "Providing high-performance superbikes for enthusiasts.",
-      },
-      {
-        value: "45+ Bikes",
-        text: "From track-focused machines to comfortable tourers.",
-      },
-      {
-        value: "€3M+",
-        text: "A fleet of top-tier superbikes valued for their engineering.",
-      },
-    ],
-  },
-  {
-    id: "scooter",
-    icon: Zap,
-    modelName: "THE S1 PRO",
-    modelDescription: "HYPERDRIVE MOTOR",
-    tag: "• ELECTRIC",
-    price: 550.0,
-    mainHeading: "Explore Cities With E-Scooters",
-    description:
-      "Navigate the urban jungle with ease. Our e-scooters are smart, sustainable, and perfect for city exploration.",
-    imageUrl:
-      "https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Ola-S1-Pro-210120221926.png",
-    stats: [
-      { value: "3+ Years", text: "Pioneering smart urban mobility solutions." },
-      {
-        value: "200+ Scooters",
-        text: "Our large fleet ensures availability across the city.",
-      },
-      {
-        value: "€500K+",
-        text: "Investment in a green and sustainable transport network.",
-      },
-    ],
-  },
-  {
-    id: "rocket",
-    icon: Rocket,
-    modelName: "THE STARSHIP",
-    modelDescription: "SUPER HEAVY RAPTOR",
-    tag: "• SPACEX",
-    price: 99999.99,
-    mainHeading: "Travel Beyond The Earth",
-    description:
-      "For the ultimate journey. Our spacecraft are designed for interplanetary travel, offering an experience out of this world.",
-    imageUrl:
-      "https://www.pngmart.com/files/22/SpaceX-Starship-PNG-Isolated-Pic.png",
-    stats: [
-      {
-        value: "1+ Year",
-        text: "Leading the new age of commercial space travel.",
-      },
-      {
-        value: "5+ Flights",
-        text: "Successful missions and counting towards Mars.",
-      },
-      {
-        value: "$2B+",
-        text: "Valuation of our next-generation reusable rocket technology.",
-      },
-    ],
-  },
+const CalendarIcon = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+);
+
+const ClockIcon = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+);
+
+const MapPinIcon = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+);
+
+const SearchIcon = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+);
+
+const CarIcon = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14 16.5 19 22l-5-5.5"></path><path d="M4 13.5 9 9l-5 5.5"></path><path d="M14 8.5 9 13l5-4.5"></path><path d="m11.5 6-6 6"></path><path d="M20.5 12.5c0-1.8-1.4-3.5-3.5-3.5s-3.5 1.8-3.5 3.5c0 1.5 1 3 2.5 3.5"></path><path d="M12.5 2.5c0 1.8 1.4 3.5 3.5 3.5s3.5-1.8 3.5-3.5c0-1.5-1-3-2.5-3.5"></path><path d="m3.5 17.5 4.5-4.5"></path><path d="M15 12.5c0-1.5-1-3-2.5-3.5A3.5 3.5 0 0 0 9 12.5c0 1.8 1.4 3.5 3.5 3.5s3.5-1.8 3.5-3.5"></path></svg>
+);
+
+const ShieldIcon = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+);
+
+const HandshakeIcon = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m11 17 2 2a1 1 0 1 0 1.4-1.4l-2-2"></path><path d="m5.8 11.8 2.2 2.2c.5.5 1.2.5 1.7 0l2.4-2.4c.5-.5.5-1.2 0-1.7l-2.2-2.2c-.5-.5-1.2-.5-1.7 0l-2.4 2.4c-.5.5-.5 1.2 0 1.7Z"></path><path d="m14 6-2.5 2.5"></path><path d="m18 10-2.5 2.5"></path><path d="m19 11 2.2 2.2c.5.5 1.2.5 1.7 0l1.2-1.2c.5-.5.5-1.2 0-1.7l-2.2-2.2c-.5-.5-1.2-.5-1.7 0l-1.2 1.2Z"></path></svg>
+);
+
+
+// --- Data for different vehicles ---
+const vehicles = [
+    {
+        type: 'Car',
+        name: 'BMW 5 Series',
+        imageUrl: 'https://placehold.co/1000x500/3B82F6/FFFFFF?text=BMW+5+Series&font=raleway',
+    },
+    {
+        type: 'Bike',
+        name: 'Sports Bike',
+        imageUrl: 'https://placehold.co/1000x500/10B981/FFFFFF?text=Sports+Bike&font=raleway',
+    },
+    {
+        type: 'Van',
+        name: 'Utility Van',
+        imageUrl: 'https://placehold.co/1000x500/F59E0B/FFFFFF?text=Utility+Van&font=raleway',
+    },
 ];
 
-const Home: React.FC = () => {
-  const [selectedVehicleId, setSelectedVehicleId] = useState("car");
-  const [isFading, setIsFading] = useState(false);
 
-  const currentVehicle =
-    vehicleData.find((v) => v.id === selectedVehicleId) || vehicleData[0];
+const HeroSection = () => {
+    const [currentVehicleIndex, setCurrentVehicleIndex] = useState(0);
 
-  const handleVehicleChange = (id: string) => {
-    if (id === selectedVehicleId) return;
+    const currentVehicle = vehicles[currentVehicleIndex];
 
-    setIsFading(true);
-    setTimeout(() => {
-      setSelectedVehicleId(id);
-      setIsFading(false);
-    }, 200);
-  };
-
-  return (
-    <div id="home" className="min-h-screen w-full bg-background flex items-center justify-center font-sans">
-      <main id="models" className="container max-w-7xl mx-auto px-6 py-8 mt-12 md:mt-16 mb-8 bg-card rounded-4xl shadow-lg relative">
-        <div className="grid grid-cols-12 gap-8 items-center relative z-10">
-          <div className="col-span-1 flex flex-col items-center gap-6">
-            {vehicleData.map((vehicle) => (
-              <button
-                key={vehicle.id}
-                onClick={() => handleVehicleChange(vehicle.id)}
-                className={`p-3 rounded-full transition-colors duration-300 ${
-                  selectedVehicleId === vehicle.id
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                }`}
-              >
-                <vehicle.icon size={24} />
-              </button>
-            ))}
-          </div>
-
-          <div
-            className={`col-span-4 flex flex-col justify-between h-full pt-12 pb-20 transition-opacity duration-200 ${
-              isFading ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <div>
-              <p className="text-sm font-semibold tracking-widest text-muted-foreground">
-                SEE PERFORMANCE ↗
-              </p>
-              <h3 className="text-lg mt-2 font-medium text-foreground">
-                {currentVehicle.modelName}
-              </h3>
-              <p className="text-muted-foreground">
-                {currentVehicle.modelDescription}
-              </p>
-            </div>
-            <div className="mt-auto">
-              <Button
-                variant="outline"
-                className="rounded-full px-6 py-3 text-foreground"
-              >
-                {currentVehicle.tag}
-              </Button>
-              <p className="text-sm mt-8 text-muted-foreground">Rent B/D</p>
-              <p className="text-5xl font-bold text-foreground">
-                ${currentVehicle.price.toFixed(2)}
-              </p>
-            </div>
-            <div className="flex items-center gap-4 mt-8">
-              <Button
-                size="icon"
-                variant="outline"
-                className="w-12 h-12 rounded-full"
-              >
-                <ArrowLeft size={20} />
-              </Button>
-              <Button
-                size="icon"
-                variant="outline"
-                className="w-12 h-12 rounded-full"
-              >
-                <ArrowRight size={20} />
-              </Button>
-            </div>
-          </div>
-
-          <div
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-10 w-[800px] z-0 transition-opacity duration-200 ${
-              isFading ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <img
-              src={currentVehicle.imageUrl}
-              alt={currentVehicle.modelName}
-              className="w-full h-auto object-contain"
-            />
-          </div>
-
-          <div
-            className={`col-span-7 flex flex-col justify-between items-start h-full pt-12 pb-20 pl-24 transition-opacity duration-200 ${
-              isFading ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <div>
-              <p className="text-muted-foreground font-medium">
-                {currentVehicle.description.split(".")[0]}!
-              </p>
-              <h1
-                className="text-7xl font-extrabold text-foreground mt-4 leading-tight"
-                dangerouslySetInnerHTML={{
-                  __html: currentVehicle.mainHeading.replace(/ /g, " <br /> "),
-                }}
-              />
+    return (
+        <section className="relative bg-gray-50 dark:bg-gray-900 pt-24 pb-12 sm:pt-32 sm:pb-16 min-h-[80vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden">
+            <div className="absolute inset-0 top-[-20%] sm:top-[-40%] md:top-[-50%] lg:top-[-60%] flex items-center justify-center">
+                 <div className="w-[150%] sm:w-[120%] md:w-[100%] aspect-square rounded-full bg-gradient-to-b from-blue-200 via-blue-100 to-transparent dark:from-blue-900/50 dark:via-blue-800/20 dark:to-transparent"></div>
             </div>
 
-            <div className="mt-8">
-              <p className="text-muted-foreground max-w-md">
-                {currentVehicle.description}
-              </p>
-            </div>
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-gray-800 dark:text-white leading-tight tracking-tighter mb-6">
+                    RIDE SMARTER <br /> SAVE TOGETHER.
+                </h1>
+                
+                <div className="max-w-4xl mx-auto mb-8">
+                    <img
+                        key={currentVehicle.name}
+                        src={currentVehicle.imageUrl}
+                        alt={currentVehicle.name}
+                        className="w-full h-auto object-contain animate-fade-in"
+                    />
+                </div>
 
-            <div className="flex items-center gap-4 mt-12">
-              <Button
-                size="lg"
-                className="text-primary-foreground rounded-lg px-8 py-6"
-              >
-                Explore Now <ArrowRight className="ml-2" size={20} />
-              </Button>
-              <Button
-                size="lg"
-                variant="ghost"
-                className="text-foreground rounded-lg px-8 py-6"
-              >
-                <PlayCircle className="mr-2" size={20} /> Watch Video
-              </Button>
-            </div>
-          </div>
-        </div>
+                {/* Search Form Card */}
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-6 max-w-6xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+                        <div className="lg:col-span-2">
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="relative">
+                                    <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input type="text" placeholder="Departure" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition" />
+                                </div>
+                                <div className="relative">
+                                    <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input type="text" placeholder="Destination" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition" />
+                                </div>
+                             </div>
+                        </div>
+                         <div className="lg:col-span-2">
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                 <div className="relative">
+                                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input type="date" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-500" />
+                                </div>
+                                <div className="relative">
+                                    <ClockIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input type="time" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-500" />
+                                </div>
+                             </div>
+                        </div>
+                        <button className="bg-blue-500 text-white rounded-lg py-2 px-6 flex items-center justify-center font-semibold hover:bg-blue-600 transition w-full h-full">
+                            <SearchIcon className="w-5 h-5 mr-2" />
+                            Search
+                        </button>
+                    </div>
+                </div>
 
-        <div
-          id="services"
-          className={`mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center border-t border-border pt-12 transition-opacity duration-200 ${
-            isFading ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          {currentVehicle.stats.map((stat, index) => (
-            <div key={index}>
-              <h2 className="text-5xl font-bold text-foreground">
-                {stat.value}
-              </h2>
-              <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-                {stat.text}
-              </p>
+                <div className="flex justify-center space-x-2 mt-8">
+                    {vehicles.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentVehicleIndex(index)}
+                            className={`w-3 h-3 rounded-full transition ${currentVehicleIndex === index ? 'bg-blue-500 scale-125' : 'bg-gray-300 dark:bg-gray-600'}`}
+                            aria-label={`Select ${vehicles[index].type}`}
+                        />
+                    ))}
+                </div>
             </div>
-          ))}
-        </div>
-      </main>
-      <div id="gallery" />
-    </div>
-  );
+        </section>
+    );
 };
 
-export default Home;
+
+const HowItWorksSection = () => (
+    <section className="py-16 sm:py-24 bg-white dark:bg-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">How It Works</h2>
+                <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    Find a ride, offer a ride, and travel together with ease. It's simple, affordable, and good for the planet.
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div className="p-6">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 dark:text-blue-400 mx-auto mb-4">
+                        <CarIcon className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Your pick of rides at low prices</h3>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">No matter where you’re going, find the perfect ride from our wide range of destinations and routes.</p>
+                </div>
+                <div className="p-6">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 dark:text-blue-400 mx-auto mb-4">
+                         <HandshakeIcon className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Trust who you travel with</h3>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">We take the time to get to know each of our members. We verify profiles, ratings and IDs, so you know who you're travelling with.</p>
+                </div>
+                <div className="p-6">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 dark:text-blue-400 mx-auto mb-4">
+                         <ShieldIcon className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Scroll, click, tap and go!</h3>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">Booking a ride has never been easier! Thanks to our simple app powered by great technology, you can book a ride close to you in minutes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+);
+
+
+const SafetySection = () => (
+    <section className="py-16 sm:py-24 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+                        Help Us keep you safe from scams and fraud.
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        A reminder that you're travelling for business or pleasure, you should remain vigilant to car-sharing scams. Follow our tips to stay safe.
+                    </p>
+                    <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors">
+                        Learn More
+                    </button>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <img src="https://placehold.co/600x400/10B981/FFFFFF?text=Motorbike&font=raleway" alt="Motorbike" className="rounded-lg shadow-lg aspect-video object-cover" />
+                    <img src="https://placehold.co/600x400/6366F1/FFFFFF?text=Scooter+1&font=raleway" alt="Scooter" className="rounded-lg shadow-lg aspect-video object-cover" />
+                    <img src="https://placehold.co/600x400/8B5CF6/FFFFFF?text=Scooter+2&font=raleway" alt="Scooter" className="rounded-lg shadow-lg aspect-video object-cover" />
+                    <img src="https://placehold.co/600x400/F59E0B/FFFFFF?text=Delivery+Van&font=raleway" alt="Van" className="rounded-lg shadow-lg aspect-video object-cover" />
+                </div>
+            </div>
+        </div>
+    </section>
+);
+
+const BonusSection = () => (
+     <section className="py-16 sm:py-24 bg-white dark:bg-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                     <img src="https://placehold.co/800x600/3B82F6/FFFFFF?text=Sports+Car&font=raleway" alt="Sports Car" className="rounded-lg shadow-lg w-full h-auto object-cover" />
+                </div>
+                <div>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+                        Enjoy a €25 carpool bonus for sharing your ride!
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-8">
+                        Offer a ride on our platform to get your bonus. All you have to do is publish your ride and get your first passengers.
+                    </p>
+                     <div className="space-y-6 mb-8">
+                         <div className="flex items-start">
+                             <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 mr-4">
+                                 <CarIcon className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h4 className="font-semibold text-gray-800 dark:text-white">Get more passengers</h4>
+                                <p className="text-gray-600 dark:text-gray-400">Reach more people looking for a ride.</p>
+                            </div>
+                        </div>
+                         <div className="flex items-start">
+                              <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 mr-4">
+                                <ShieldIcon className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h4 className="font-semibold text-gray-800 dark:text-white">Verified and Secure</h4>
+                                 <p className="text-gray-600 dark:text-gray-400">We verify all profiles to ensure a safe community.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors">
+                        Offer a ride
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+);
+
+const Footer = () => (
+    <footer className="bg-gray-100 dark:bg-gray-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Community</h4>
+                    <ul className="space-y-2">
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">About Us</a></li>
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">How it works</a></li>
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Careers</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Support</h4>
+                    <ul className="space-y-2">
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Help Centre</a></li>
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Trust & Safety</a></li>
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Contact us</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Legal</h4>
+                    <ul className="space-y-2">
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Terms of Service</a></li>
+                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Follow Us</h4>
+                     <div className="flex space-x-4">
+                        {/* Add social media icons here */}
+                     </div>
+                </div>
+            </div>
+            <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center text-gray-500 dark:text-gray-400">
+                &copy; {new Date().getFullYear()} MatteCar. All rights reserved.
+            </div>
+        </div>
+    </footer>
+);
+
+
+// --- Main App Component ---
+export default function App() {
+    return (
+        <div className="bg-white dark:bg-gray-800">
+            <main>
+                <HeroSection />
+                <HowItWorksSection />
+                <SafetySection />
+                <BonusSection />
+            </main>
+            <Footer />
+        </div>
+    );
+}
+
+// Add some keyframe animations for entry effects
+const style = document.createElement('style');
+style.innerHTML = `
+    @keyframes fade-in {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in {
+        animation: fade-in 0.5s ease-out forwards;
+    }
+`;
+document.head.appendChild(style);
