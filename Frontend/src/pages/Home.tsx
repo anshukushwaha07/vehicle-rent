@@ -1,5 +1,8 @@
 import  { useState } from 'react';
 
+import Header from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+
 const CalendarIcon = ({ className = "w-6 h-6" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
 );
@@ -48,6 +51,7 @@ const vehicles = [
     },
 ];
 
+<Header />
 
 const HeroSection = () => {
     const [currentVehicleIndex, setCurrentVehicleIndex] = useState(0);
@@ -230,52 +234,11 @@ const BonusSection = () => (
     </section>
 );
 
-const Footer = () => (
-    <footer className="bg-gray-100 dark:bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div>
-                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Community</h4>
-                    <ul className="space-y-2">
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">About Us</a></li>
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">How it works</a></li>
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Careers</a></li>
-                    </ul>
-                </div>
-                 <div>
-                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Support</h4>
-                    <ul className="space-y-2">
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Help Centre</a></li>
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Trust & Safety</a></li>
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Contact us</a></li>
-                    </ul>
-                </div>
-                 <div>
-                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Legal</h4>
-                    <ul className="space-y-2">
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Terms of Service</a></li>
-                        <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-500">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                 <div>
-                    <h4 className="font-bold text-gray-800 dark:text-white mb-4">Follow Us</h4>
-                     <div className="flex space-x-4">
-                        {/* Add social media icons here */}
-                     </div>
-                </div>
-            </div>
-            <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center text-gray-500 dark:text-gray-400">
-                &copy; {new Date().getFullYear()} MatteCar. All rights reserved.
-            </div>
-        </div>
-    </footer>
-);
-
-
 // --- Main App Component ---
-export default function App() {
+export default function Home() {
     return (
         <div className="bg-white dark:bg-gray-800">
+            <Header />
             <main>
                 <HeroSection />
                 <HowItWorksSection />

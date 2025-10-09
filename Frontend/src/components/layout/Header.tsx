@@ -1,21 +1,37 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react"; // Assuming lucide-react is installed in your project
+import { Menu, X } from "lucide-react";
 
 // Define navigation links to match the new design
 const navLinks = [
-  { href: "#", label: "Ride" },
-  { href: "#", label: "Drive" },
-  { href: "#", label: "Business" },
-  { href: "#", label: "Help" },
+  { href: "/", label: "Ride" },
+  { href: "/", label: "Drive" },
+  { href: "/", label: "Business" },
+  { href: "/", label: "Help" },
 ];
+
+// Helper function to navigate without full page reload
+const navigate = (path: string) => {
+  window.history.pushState({}, '', path);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+};
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    navigate(href);
+    setMenuOpen(false);
+  };
+
   return (
     <header className="fixed top-0 left-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700/50">
       <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-        <a href="#" className="text-2xl font-bold text-gray-800 dark:text-white">
+        <a 
+          href="/" 
+          onClick={(e) => handleNavigation(e, '/')}
+          className="text-2xl font-bold text-gray-800 dark:text-white"
+        >
           MatteCar
         </a>
 
@@ -24,6 +40,7 @@ export default function Header() {
             <a
               key={link.label}
               href={link.href}
+              onClick={(e) => handleNavigation(e, link.href)}
               className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
             >
               {link.label}
@@ -32,10 +49,18 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <a href="#" className="hidden sm:block text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 font-medium transition-colors">
+          <a 
+            href="/login" 
+            onClick={(e) => handleNavigation(e, '/login')}
+            className="hidden sm:block text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 font-medium transition-colors"
+          >
             Log in
           </a>
-          <a href="#" className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-600 transition-colors">
+          <a 
+            href="/signup" 
+            onClick={(e) => handleNavigation(e, '/signup')}
+            className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-600 transition-colors"
+          >
             Sign up
           </a>
           
@@ -56,12 +81,19 @@ export default function Header() {
             <a
               key={link.label}
               href={link.href}
-              onClick={() => setMenuOpen(false)}
+              onClick={(e) => handleNavigation(e, link.href)}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 hover:bg-gray-50 dark:hover:text-white dark:hover:bg-gray-800"
             >
               {link.label}
             </a>
           ))}
+          <a
+            href="/login"
+            onClick={(e) => handleNavigation(e, '/login')}
+            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 hover:bg-gray-50 dark:hover:text-white dark:hover:bg-gray-800 sm:hidden"
+          >
+            Log in
+          </a>
         </nav>
       </div>
     </header>

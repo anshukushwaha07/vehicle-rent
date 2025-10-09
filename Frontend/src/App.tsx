@@ -1,12 +1,25 @@
-import Header from './components/layout/Header'
+import { useState, useEffect } from 'react'
 import Home from './pages/Home'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 
 const AppRouter = () => {
-  const path = window.location.pathname;
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
-  switch (path) {
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    // Listen for popstate events (browser back/forward)
+    window.addEventListener('popstate', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
+
+  switch (currentPath) {
     case '/login':
       return <LoginPage />;
     case '/signup':
@@ -17,13 +30,7 @@ const AppRouter = () => {
 };
 
 function App() {
-  return (
-    <>
-    <Header/>
-      <AppRouter />
-      </>
-     
-  )
+  return <AppRouter />
 }
 
 export default App
