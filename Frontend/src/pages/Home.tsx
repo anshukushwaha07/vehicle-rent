@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Header from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -37,24 +37,35 @@ const vehicles = [
     {
         type: 'Car',
         name: 'BMW 5 Series',
-        imageUrl: 'https://placehold.co/1000x500/3B82F6/FFFFFF?text=BMW+5+Series&font=raleway',
+        imageUrl: 'https://images.wsj.net/im-913577?width=1280&size=1.33333333',
     },
     {
         type: 'Bike',
         name: 'Sports Bike',
-        imageUrl: 'https://placehold.co/1000x500/10B981/FFFFFF?text=Sports+Bike&font=raleway',
-    },
+        imageUrl: 'https://images.pexels.com/photos/18868363/pexels-photo-18868363.jpeg',    },
     {
         type: 'Van',
         name: 'Utility Van',
-        imageUrl: 'https://placehold.co/1000x500/F59E0B/FFFFFF?text=Utility+Van&font=raleway',
+        imageUrl: 'https://images.pexels.com/photos/3298901/pexels-photo-3298901.jpeg',
     },
 ];
 
-<Header />
 
 const HeroSection = () => {
     const [currentVehicleIndex, setCurrentVehicleIndex] = useState(0);
+
+    // 💡 Implementation for automatic sliding
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            // Calculate the next index, looping back to 0 if it reaches the end
+            setCurrentVehicleIndex(prevIndex => 
+                (prevIndex + 1) % vehicles.length
+            );
+        }, 5000); // Auto-advance every 5 seconds (5000ms)
+
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array means this runs once on mount
 
     const currentVehicle = vehicles[currentVehicleIndex];
 
@@ -69,40 +80,42 @@ const HeroSection = () => {
                     RIDE SMARTER <br /> SAVE TOGETHER.
                 </h1>
                 
-                <div className="max-w-4xl mx-auto mb-8">
+                {/* Image container with fixed aspect ratio */}
+                <div className="max-w-4xl mx-auto mb-8 aspect-video">
                     <img
+                        // Using 'key' forces React to re-render the <img>, re-triggering the CSS animation
                         key={currentVehicle.name}
                         src={currentVehicle.imageUrl}
                         alt={currentVehicle.name}
-                        className="w-full h-auto object-contain animate-fade-in"
+                        className="w-full h-full object-cover animate-fade-in rounded-lg shadow-xl"
                     />
                 </div>
 
-                {/* Search Form Card */}
+                {/* Search Form Card (No changes needed here) */}
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-6 max-w-6xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
                         <div className="lg:col-span-2">
                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="relative">
-                                    <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                    <input type="text" placeholder="Departure" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition" />
-                                </div>
-                                <div className="relative">
-                                    <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                    <input type="text" placeholder="Destination" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition" />
-                                </div>
+                                 <div className="relative">
+                                     <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                     <input type="text" placeholder="Departure" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition" />
+                                 </div>
+                                 <div className="relative">
+                                     <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                     <input type="text" placeholder="Destination" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition" />
+                                 </div>
                              </div>
                         </div>
                          <div className="lg:col-span-2">
                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                  <div className="relative">
-                                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                    <input type="date" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-500" />
-                                </div>
-                                <div className="relative">
-                                    <ClockIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                    <input type="time" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-500" />
-                                </div>
+                                     <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                     <input type="date" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-500" />
+                                 </div>
+                                 <div className="relative">
+                                     <ClockIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                     <input type="time" className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-500" />
+                                 </div>
                              </div>
                         </div>
                         <button className="bg-blue-500 text-white rounded-lg py-2 px-6 flex items-center justify-center font-semibold hover:bg-blue-600 transition w-full h-full">
@@ -137,28 +150,34 @@ const HowItWorksSection = () => (
                     Find a ride, offer a ride, and travel together with ease. It's simple, affordable, and good for the planet.
                 </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div className="p-6">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 dark:text-blue-400 mx-auto mb-4">
-                        <CarIcon className="w-8 h-8" />
+            {/* Ensure all cards have the same height */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center items-stretch">
+                {[
+                    {
+                        icon: <CarIcon className="w-8 h-8" />,
+                        title: "Your pick of rides at low prices",
+                        desc: "No matter where you’re going, find the perfect ride from our wide range of destinations and routes."
+                    },
+                    {
+                        icon: <HandshakeIcon className="w-8 h-8" />,
+                        title: "Trust who you travel with",
+                        desc: "We take the time to get to know each of our members. We verify profiles, ratings and IDs, so you know who you're travelling with."
+                    },
+                    {
+                        icon: <ShieldIcon className="w-8 h-8" />,
+                        title: "Scroll, click, tap and go!",
+                        desc: "Booking a ride has never been easier! Thanks to our simple app powered by great technology, you can book a ride close to you in minutes."
+                    }
+                ].map((item, index) => (
+                    // Use h-full, flex, and flex-col, plus flex-grow on the paragraph, to enforce equal height
+                    <div key={index} className="p-6 h-full flex flex-col justify-start bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 dark:text-blue-400 mx-auto mb-4">
+                            {item.icon}
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{item.title}</h3>
+                        <p className="mt-2 text-gray-600 dark:text-gray-400 flex-grow">{item.desc}</p>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Your pick of rides at low prices</h3>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">No matter where you’re going, find the perfect ride from our wide range of destinations and routes.</p>
-                </div>
-                <div className="p-6">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 dark:text-blue-400 mx-auto mb-4">
-                         <HandshakeIcon className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Trust who you travel with</h3>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">We take the time to get to know each of our members. We verify profiles, ratings and IDs, so you know who you're travelling with.</p>
-                </div>
-                <div className="p-6">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 dark:text-blue-400 mx-auto mb-4">
-                         <ShieldIcon className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Scroll, click, tap and go!</h3>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">Booking a ride has never been easier! Thanks to our simple app powered by great technology, you can book a ride close to you in minutes.</p>
-                </div>
+                ))}
             </div>
         </div>
     </section>
@@ -181,10 +200,10 @@ const SafetySection = () => (
                     </button>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <img src="https://placehold.co/600x400/10B981/FFFFFF?text=Motorbike&font=raleway" alt="Motorbike" className="rounded-lg shadow-lg aspect-video object-cover" />
-                    <img src="https://placehold.co/600x400/6366F1/FFFFFF?text=Scooter+1&font=raleway" alt="Scooter" className="rounded-lg shadow-lg aspect-video object-cover" />
-                    <img src="https://placehold.co/600x400/8B5CF6/FFFFFF?text=Scooter+2&font=raleway" alt="Scooter" className="rounded-lg shadow-lg aspect-video object-cover" />
-                    <img src="https://placehold.co/600x400/F59E0B/FFFFFF?text=Delivery+Van&font=raleway" alt="Van" className="rounded-lg shadow-lg aspect-video object-cover" />
+                    <img src="https://images.pexels.com/photos/1413412/pexels-photo-1413412.jpeg" alt="Motorbike" className="rounded-lg shadow-lg aspect-video object-cover" />
+                    <img src="https://images.pexels.com/photos/33524950/pexels-photo-33524950.jpeg" alt="Scooter" className="rounded-lg shadow-lg aspect-video object-cover" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Left_side_of_Flying_Pigeon.jpg/500px-Left_side_of_Flying_Pigeon.jpg" alt="Scooter" className="rounded-lg shadow-lg aspect-video object-cover" />
+                    <img src="https://images.wsj.net/im-913577?width=1280&size=1.33333333" alt="Van" className="rounded-lg shadow-lg aspect-video object-cover" />
                 </div>
             </div>
         </div>
@@ -193,49 +212,75 @@ const SafetySection = () => (
 
 const BonusSection = () => (
      <section className="py-16 sm:py-24 bg-white dark:bg-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                     <img src="https://placehold.co/800x600/3B82F6/FFFFFF?text=Sports+Car&font=raleway" alt="Sports Car" className="rounded-lg shadow-lg w-full h-auto object-cover" />
-                </div>
-                <div>
-                    <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-                        Enjoy a €25 carpool bonus for sharing your ride!
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-400 mb-8">
-                        Offer a ride on our platform to get your bonus. All you have to do is publish your ride and get your first passengers.
-                    </p>
-                     <div className="space-y-6 mb-8">
-                         <div className="flex items-start">
-                             <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 mr-4">
-                                 <CarIcon className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h4 className="font-semibold text-gray-800 dark:text-white">Get more passengers</h4>
-                                <p className="text-gray-600 dark:text-gray-400">Reach more people looking for a ride.</p>
-                            </div>
-                        </div>
-                         <div className="flex items-start">
+         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                 {/* Image container with fixed aspect ratio */}
+                 <div className="aspect-video">
+                     <img 
+                         src="https://d2hucwwplm5rxi.cloudfront.net/wp-content/uploads/2022/09/23074716/sports-vs-supercars-cover-230920221250.jpg"
+                         alt="Sports Car" 
+                         // Image fills the container, maintaining consistency
+                         className="rounded-lg shadow-lg w-full h-full object-cover" 
+                     />
+                 </div>
+                 <div>
+                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+                         Enjoy a €25 carpool bonus for sharing your ride!
+                     </h2>
+                     <p className="text-gray-600 dark:text-gray-400 mb-8">
+                         Offer a ride on our platform to get your bonus. All you have to do is publish your ride and get your first passengers.
+                     </p>
+                      <div className="space-y-6 mb-8">
+                          <div className="flex items-start">
                               <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 mr-4">
-                                <ShieldIcon className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h4 className="font-semibold text-gray-800 dark:text-white">Verified and Secure</h4>
-                                 <p className="text-gray-600 dark:text-gray-400">We verify all profiles to ensure a safe community.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors">
-                        Offer a ride
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
+                                  <CarIcon className="w-6 h-6" />
+                              </div>
+                              <div>
+                                  <h4 className="font-semibold text-gray-800 dark:text-white">Get more passengers</h4>
+                                  <p className="text-gray-600 dark:text-gray-400">Reach more people looking for a ride.</p>
+                              </div>
+                          </div>
+                          <div className="flex items-start">
+                               <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 mr-4">
+                                 <ShieldIcon className="w-6 h-6" />
+                              </div>
+                              <div>
+                                  <h4 className="font-semibold text-gray-800 dark:text-white">Verified and Secure</h4>
+                                  <p className="text-gray-600 dark:text-gray-400">We verify all profiles to ensure a safe community.</p>
+                              </div>
+                          </div>
+                     </div>
+                     <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors">
+                         Offer a ride
+                     </button>
+                 </div>
+             </div>
+         </div>
+     </section>
 );
 
 // --- Main App Component ---
+
 export default function Home() {
+    // 💡 Add the CSS keyframes directly here for a fully contained solution
+    // This runs once when the component is first rendered (simulating a global style add)
+    useEffect(() => {
+        if (!document.getElementById('fade-in-style')) {
+            const style = document.createElement('style');
+            style.id = 'fade-in-style';
+            style.innerHTML = `
+                @keyframes fade-in {
+                    from { opacity: 0; transform: scale(0.95); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+                .animate-fade-in {
+                    animation: fade-in 0.5s ease-out forwards;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }, []);
+
     return (
         <div className="bg-white dark:bg-gray-800">
             <Header />
@@ -249,16 +294,3 @@ export default function Home() {
         </div>
     );
 }
-
-// Add some keyframe animations for entry effects
-const style = document.createElement('style');
-style.innerHTML = `
-    @keyframes fade-in {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
-    }
-    .animate-fade-in {
-        animation: fade-in 0.5s ease-out forwards;
-    }
-`;
-document.head.appendChild(style);
