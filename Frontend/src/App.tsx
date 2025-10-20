@@ -1,37 +1,19 @@
-import { useState, useEffect } from 'react'
-import Home from './pages/Home'
-import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import VehiclesPage from './pages/VehiclesPage';
+// import ProfilePage from './pages/ProfilePage';
 
-const AppRouter = () => {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const handleLocationChange = () => {
-      setCurrentPath(window.location.pathname);
-    };
-
-    // Listen for popstate events (browser back/forward)
-    window.addEventListener('popstate', handleLocationChange);
-
-    return () => {
-      window.removeEventListener('popstate', handleLocationChange);
-    };
-  }, []);
-
-  switch (currentPath) {
-    case '/login':
-      return <LoginPage />;
-    case '/signup':
-      return <SignupPage />;
-    default:
-      return <Home />;
-  }
-};
-
-function App() {
-  return <AppRouter />
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/vehicles" element={<VehiclesPage />} />
+      {/* <Route path="/profile" element={<ProfilePage />} /> */}
+    </Routes>
+  );
 }
-
-export default App
 
