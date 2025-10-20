@@ -1,5 +1,6 @@
 import Booking from '../models/booking.model.js';
 import Vehicle from '../models/vehicle.model.js';
+import catchAsync from '../utils/catchAsync.js'
 
 // create new booking
 export const createBooking = async (req, res) => {
@@ -86,3 +87,17 @@ export const getMyBookings = async (req, res) => {
     });
   }
 };
+
+
+export const getAllBookings = catchAsync(async (req, res, next) => {
+  // Find all bookings in the database
+  const bookings = await Booking.find();
+
+  res.status(200).json({
+    status: 'success',
+    results: bookings.length,
+    data: {
+      bookings,
+    },
+  });
+});
