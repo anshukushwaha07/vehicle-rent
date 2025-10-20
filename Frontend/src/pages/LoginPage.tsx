@@ -1,13 +1,9 @@
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext'; 
 import Header from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 
-// Helper function to navigate
-const navigate = (path: string) => {
-  window.history.pushState({}, '', path);
-  window.dispatchEvent(new PopStateEvent('popstate'));
-};
-
-// A simple social login button component
 const SocialButton = ({ icon, text, provider }: { icon: string, text: string, provider: string }) => (
     <button className="w-full flex items-center justify-center gap-2 py-2.5 border rounded-lg hover:bg-accent transition-colors">
         <img src={icon} alt={`${provider} logo`} className="w-5 h-5" />
@@ -16,6 +12,30 @@ const SocialButton = ({ icon, text, provider }: { icon: string, text: string, pr
 );
 
 export default function LoginPage() {
+    
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+   
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent the browser from reloading the page
+        setLoading(true);
+        try {
+            await login(email, password);
+            navigate('/vehicles'); // Redirect to the homepage on successful login
+        } catch (error) {
+            // The AuthContext already shows a toast notification for the error
+            console.error("Login failed on the component side:", error);
+        } finally {
+            setLoading(false); // Stop the loading indicator
+        }
+    };
+
     return (
         <>
             <Header />
@@ -37,7 +57,8 @@ export default function LoginPage() {
                             <p className="text-muted-foreground mt-2">Enter your credentials to access your account.</p>
                         </div>
                         
-                        <form className="space-y-6">
+                     
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div className="space-y-4">
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
@@ -46,6 +67,9 @@ export default function LoginPage() {
                                         id="email" 
                                         placeholder="you@example.com"
                                         className="w-full px-4 py-2 border rounded-lg bg-background focus:ring-2 focus:ring-ring outline-none transition" 
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
                                     />
                                 </div>
                                 <div>
@@ -58,12 +82,15 @@ export default function LoginPage() {
                                         id="password" 
                                         placeholder="••••••••"
                                         className="w-full px-4 py-2 border rounded-lg bg-background focus:ring-2 focus:ring-ring outline-none transition" 
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
                                     />
                                 </div>
                             </div>
 
-                            <button type="submit" className="w-full bg-primary text-primary-foreground py-2.5 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
-                                Log In
+                            <button type="submit" className="w-full bg-primary text-primary-foreground py-2.5 rounded-lg font-semibold hover:bg-primary/90 transition-colors" disabled={loading}>
+                                {loading ? 'Logging In...' : 'Log In'}
                             </button>
                         </form>
 
@@ -82,7 +109,7 @@ export default function LoginPage() {
                         </div>
                         
                         <p className="text-center text-sm text-muted-foreground mt-8">
-                            Don't have an account? <a href="/signup" onClick={(e) => { e.preventDefault(); navigate('/signup'); }} className="text-primary hover:underline cursor-pointer">Sign up</a>
+                            Don't have an account? <Link to="/signup" className="text-primary hover:underline">Sign up</Link>
                         </p>
                     </div>
                 </div>
@@ -91,4 +118,3 @@ export default function LoginPage() {
         </>
     );
 }
-
