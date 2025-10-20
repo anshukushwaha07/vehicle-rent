@@ -64,7 +64,7 @@ export const login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-//  LOGOUT CONTROLLER (New) 
+//  LOGOUT CONTROLLER  
 export const logout = (req, res) => {
   // To log out, we send a cookie with the same name but set its maxAge to 1ms,
   // effectively expiring it instantly.
@@ -74,3 +74,13 @@ export const logout = (req, res) => {
   });
   res.status(200).json({ status: 'success' });
 };
+
+export const getMe = catchAsync(async (req, res, next) => {
+  // The 'protect' middleware has already found the user and attached it to req.user
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: req.user,
+    },
+  });
+});
