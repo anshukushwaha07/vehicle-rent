@@ -1,11 +1,12 @@
-import { createContext, useState, useContext, type ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import { toast } from 'react-hot-toast';
-import { type User, type SignUpData, loginUser as apiLogin, logoutUser as apiLogout, signupUser as apiSignup } from '../services/api';
-
+import {loginUser as apiLogin, logoutUser as apiLogout, signupUser as apiSignup, getCurrentUser } from '../services/api';
+import type { User, SignUpData } from '../types';
 // Define the shape of the context's value
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean; // Add loading state
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signup: (userData: SignUpData) => Promise<void>;
@@ -17,6 +18,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Create the provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Start in a loading state
+
+  // This effect runs once when the app loads to check if a user is already logged in
+  useEffect(() => {
+    const checkUserStatus = async () => {
+      try {
+        const response = await getCurrentUser();
+        if (response.data.user) {
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        // This is expected if the user isn't logged in, so we don't show an error toast
+        setUser(null);
+      } finally {
+        // We're done checking, so set loading to false
+        setIsLoading(false);
+      }
+    };
+
+    checkUserStatus();
+  }, []); // The empty dependency array [] ensures this effect runs only once
 
   const login = async (email: string, password: string) => {
     try {
@@ -56,9 +78,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isAuthenticated = !!user;
 
-  return (
+  return (    
     // Add the signup function to the provider's value 
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, signup }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );
