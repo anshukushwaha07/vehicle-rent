@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
-import { type SignUpData } from '../services/api';
+import type { SignUpData } from '../types';
 
 const SocialButton = ({ icon, text, provider }: { icon: string, text: string, provider: string }) => (
     <button className="w-full flex items-center justify-center gap-2 py-2.5 border rounded-lg hover:bg-accent transition-colors">
@@ -98,7 +98,7 @@ export default function SignupPage() {
                                 <span className="bg-card px-2 text-muted-foreground">Or sign up with</span>
                             </div>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                            <SocialButton provider="Google" text="Google" icon="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" />
                            <SocialButton provider="Facebook" text="Facebook" icon="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg" />
