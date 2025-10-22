@@ -27,3 +27,13 @@ export interface Vehicle {
   pricePerDay: number;
   imageUrl: string;
 }
+
+export interface Booking {
+  _id: string;
+  user: User;
+  vehicle: Vehicle; 
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: 'upcoming' | 'active' | 'completed' | 'cancelled';
+}
