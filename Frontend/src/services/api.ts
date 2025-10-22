@@ -5,6 +5,47 @@ import type { Vehicle, User, SignUpData} from '../types';
 // Use Omit to create a type for the form data, excluding server-generated fields
 export type VehicleFormData = Omit<Vehicle, '_id'>;
 
+export interface BookingFormData {
+  vehicleId: string;
+  startDate: string;
+  endDate: string;
+}
+
+interface SingleBookingResponse {
+  status: 'success';
+  data: {
+    booking: Booking;
+  };
+}
+
+interface MyBookingsResponse {
+  status: 'success';
+  results: number;
+  data: {
+    bookings: Booking[];
+  };
+}
+
+export interface Booking {
+  _id: string;
+  user: User;
+  vehicle: Vehicle;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: 'upcoming' | 'active' | 'completed' | 'cancelled';
+}
+
+interface BookingsResponse {
+  status: 'success';
+  results: number;
+  data: {
+    bookings: Booking[];
+  };
+}
+
+
+
 interface AuthResponse {
   status: 'success';
   token: string;
@@ -130,6 +171,24 @@ export const updateVehicle = async (id: string, vehicleData: Partial<VehicleForm
 // Delete a vehicle
 export const deleteVehicle = async (id: string): Promise<void> => {
   await api.delete(`/vehicles/${id}`);
+};
+
+
+export const getAllBookings = async (): Promise<BookingsResponse> => {
+  const { data } = await api.get('/bookings');
+  return data;
+};
+
+// Create a new booking
+export const createBooking = async (bookingData: BookingFormData): Promise<SingleBookingResponse> => {
+  const { data } = await api.post('/bookings', bookingData);
+  return data;
+};
+
+// Get all bookings for the currently logged-in user
+export const getMyBookings = async (): Promise<MyBookingsResponse> => {
+  const { data } = await api.get('/bookings/my-bookings');
+  return data;
 };
 
 export default api;
