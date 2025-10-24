@@ -5,6 +5,26 @@ import type { Vehicle, User, SignUpData} from '../types';
 // Use Omit to create a type for the form data, excluding server-generated fields
 export type VehicleFormData = Omit<Vehicle, '_id'>;
 
+interface InitiatePaymentResponse {
+  status: 'success';
+  data: {
+    access_key: string;
+    bookingId: string; // Ensure backend sends this
+  };
+}
+
+interface ConfirmPaymentPayload {
+  status: 'success' | 'failure';
+  paymentId?: string; // Optional Easybuzz payment ID
+}
+
+interface ConfirmPaymentResponse {
+  status: 'success';
+  data: {
+    booking: Booking;
+  };
+}
+
 export interface BookingFormData {
   vehicleId: string;
   startDate: string;
@@ -188,6 +208,26 @@ export const createBooking = async (bookingData: BookingFormData): Promise<Singl
 // Get all bookings for the currently logged-in user
 export const getMyBookings = async (): Promise<MyBookingsResponse> => {
   const { data } = await api.get('/bookings/my-bookings');
+  return data;
+};
+
+
+export const initiatePaymentApi = async (bookingDetails: {
+  vehicleId: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+}): Promise<InitiatePaymentResponse> => {
+  const { data } = await api.post('/payments/initiate', bookingDetails);
+  return data;
+};
+
+// --- ADD PAYMENT CONFIRMATION FUNCTION ---
+export const confirmPaymentApi = async (
+  bookingId: string,
+  payload: ConfirmPaymentPayload
+): Promise<ConfirmPaymentResponse> => {
+  const { data } = await api.patch(`/bookings/${bookingId}/confirm-payment`, payload);
   return data;
 };
 
