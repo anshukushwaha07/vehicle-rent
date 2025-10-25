@@ -101,3 +101,39 @@ export const getAllBookings = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+
+export const confirmBookingPayment = catchAsync(async (req, res, next) => {
+  const { bookingId } = req.params;
+  const { status, paymentId } = req.body; // Status ('success' or 'failure') from frontend
+
+  const booking = await Booking.findById(bookingId);
+
+  if (!booking) {
+    return res.status(404).json({ status: 'fail', message: 'Booking not found.' });
+  }
+
+  // Security check: Ensure the logged-in user owns this booking
+  if (booking.user.toString() !== req.user.id) {
+     return res.status(403).json({ status: 'fail', message: 'Not authorized.' });
+  }
+
+  // Only update if still pending (prevents overwriting webhook confirmation later)
+  if (booking.paymentDetails.status === 'pending') {
+    if (status === 'success') {
+      booking.paymentDetails.status = 'paid';
+      booking.paymentDetails.paymentId = paymentId || 'N/A_FrontendConfirm';
+    } else {
+      booking.paymentDetails.status = 'failed';
+      // booking.status = 'cancelled'; // Optionally cancel the booking
+    }
+    await booking.save();
+  } else {
+    console.log(`Booking ${bookingId} already processed: ${booking.paymentDetails.status}`);
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { booking },
+  });
+});
