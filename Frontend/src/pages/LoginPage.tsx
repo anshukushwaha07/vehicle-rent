@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; 
 import Header from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
+import loginImage from '../assets/vehical_img/login1.png';
 
 const SocialButton = ({ icon, text, provider }: { icon: string, text: string, provider: string }) => (
     <button className="w-full flex items-center justify-center gap-2 py-2.5 border rounded-lg hover:bg-accent transition-colors">
@@ -12,27 +13,23 @@ const SocialButton = ({ icon, text, provider }: { icon: string, text: string, pr
 );
 
 export default function LoginPage() {
-    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    
     const { login } = useAuth();
     const navigate = useNavigate();
 
-   
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent the browser from reloading the page
+        e.preventDefault();
         setLoading(true);
         try {
             await login(email, password);
-            navigate('/vehicles'); // Redirect to the homepage on successful login
+            navigate('/vehicles');
         } catch (error) {
-            // The AuthContext already shows a toast notification for the error
-            console.error("Login failed on the component side:", error);
+            console.error("Login failed:", error);
         } finally {
-            setLoading(false); // Stop the loading indicator
+            setLoading(false);
         }
     };
 
@@ -44,7 +41,7 @@ export default function LoginPage() {
                     {/* Left Panel: Image */}
                     <div className="hidden md:block">
                         <img 
-                            src="https://placehold.co/800x1000/2563EB/FFFFFF?text=Welcome+Back&font=raleway" 
+                            src={loginImage} 
                             alt="Login illustration" 
                             className="w-full h-full object-cover"
                         />
@@ -57,7 +54,6 @@ export default function LoginPage() {
                             <p className="text-muted-foreground mt-2">Enter your credentials to access your account.</p>
                         </div>
                         
-                     
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             <div className="space-y-4">
                                 <div>
@@ -73,10 +69,10 @@ export default function LoginPage() {
                                     />
                                 </div>
                                 <div>
-                                     <div className="flex justify-between items-center mb-1">
+                                    <div className="flex justify-between items-center mb-1">
                                         <label htmlFor="password" className="block text-sm font-medium">Password</label>
                                         <a href="#" className="text-sm text-primary hover:underline">Forgot?</a>
-                                     </div>
+                                    </div>
                                     <input 
                                         type="password" 
                                         id="password" 
@@ -94,15 +90,17 @@ export default function LoginPage() {
                             </button>
                         </form>
 
+                        {/* Social login divider - same style as Signup page */}
                         <div className="relative my-8">
                             <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t p-2" />
+                                <span className="w-full border-t" />
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
                                 <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
                             </div>
                         </div>
 
+                        {/* Social login buttons */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <SocialButton provider="Google" text="Google" icon="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" />
                             <SocialButton provider="Facebook" text="Facebook" icon="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg" />
