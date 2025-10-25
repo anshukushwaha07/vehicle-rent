@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; 
 import Header from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
-import loginImage from '../assets/vehical_img/login.png';
+import loginImage from '../assets/vehical_img/login1.png';
 
 const SocialButton = ({ icon, text, provider }: { icon: string, text: string, provider: string }) => (
     <button className="w-full flex items-center justify-center gap-2 py-2.5 border rounded-lg hover:bg-accent transition-colors">
