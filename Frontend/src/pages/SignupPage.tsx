@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import type { SignUpData } from '../types';
+import signupImage from '../assets/vehical_img/Signup.png';
+
 
 const SocialButton = ({ icon, text, provider }: { icon: string, text: string, provider: string }) => (
     <button className="w-full flex items-center justify-center gap-2 py-2.5 border rounded-lg hover:bg-accent transition-colors">
@@ -51,7 +53,7 @@ export default function SignupPage() {
             <main className="flex items-center justify-center min-h-screen bg-background px-4 py-24">
                 <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden border">
                     <div className="hidden md:block">
-                        <img src="https://placehold.co/800x1000/10B981/FFFFFF?text=Join+Us&font=raleway" alt="Signup illustration" className="w-full h-full object-cover" />
+                        <img src={signupImage} alt="Signup illustration" className="w-full h-full object-cover" />
                     </div>
                     <div className="p-8 sm:p-12 bg-card text-card-foreground">
                         <div className="text-center mb-8">
