@@ -1,5 +1,5 @@
 import express from 'express';
-import { createBooking, getMyBookings,getAllBookings } from '../controllers/bookingController.js';
+import { createBooking, getMyBookings,getAllBookings,confirmBookingPayment} from '../controllers/bookingController.js';
 import { protect,restrictTo } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -14,5 +14,6 @@ router.get('/my-bookings', getMyBookings);
 // Only an admin can get a list of ALL bookings in the system.
 router.get('/', restrictTo('admin'), getAllBookings); // Add the new admin route
 
+router.patch('/:bookingId/confirm-payment', confirmBookingPayment);
 
 export default router;
