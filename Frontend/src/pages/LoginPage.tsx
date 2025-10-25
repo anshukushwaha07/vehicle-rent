@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; 
 import Header from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
+import loginImage from '../assets/vehical_img/login.png';
 
 const SocialButton = ({ icon, text, provider }: { icon: string, text: string, provider: string }) => (
     <button className="w-full flex items-center justify-center gap-2 py-2.5 border rounded-lg hover:bg-accent transition-colors">
@@ -40,7 +41,7 @@ export default function LoginPage() {
                     {/* Left Panel: Image */}
                     <div className="hidden md:block">
                         <img 
-                            src="https://placehold.co/800x1000/2563EB/FFFFFF?text=Welcome+Back&font=raleway" 
+                            src={loginImage} 
                             alt="Login illustration" 
                             className="w-full h-full object-cover"
                         />
