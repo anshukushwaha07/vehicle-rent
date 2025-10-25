@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { getVehicleById, createBooking, type BookingFormData } from '../services/api';
+import { getVehicleById,initiatePaymentApi, confirmPaymentApi  } from '../services/api';
 import type { Vehicle } from '../types';
 import Header from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
+
+declare const EasebuzzCheckout: any;
 
 // Helper function to calculate the number of days between two dates
 const calculateDays = (start: string, end: string): number => {
@@ -26,6 +28,7 @@ export default function BookingPage() {
   const [endDate, setEndDate] = useState('');
   const [totalPrice, setTotalPrice] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   // Fetch the vehicle's details when the component loads
   useEffect(() => {
@@ -50,32 +53,31 @@ export default function BookingPage() {
     }
   }, [startDate, endDate, vehicle]);
 
-  // 3. Handle the booking submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!vehicleId || !startDate || !endDate) {
-      toast.error('Please select both a start and end date.');
-      return;
-    }
-    if (totalPrice <= 0) {
-      toast.error('End date must be after the start date.');
-      return;
-    }
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!vehicleId || !startDate || !endDate) {
+  //     toast.error('Please select both a start and end date.');
+  //     return;
+  //   }
+  //   if (totalPrice <= 0) {
+  //     toast.error('End date must be after the start date.');
+  //     return;
+  //   }
 
-    setIsLoading(true);
-    const bookingData: BookingFormData = { vehicleId, startDate, endDate };
+  //   setIsLoading(true);
+  //   const bookingData: BookingFormData = { vehicleId, startDate, endDate };
 
-    try {
-      await createBooking(bookingData);
-      toast.success('Booking successful! Enjoy your ride.');
-      // We'll create the 'My Bookings' page next
-      navigate('/my-bookings'); 
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Booking failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   try {
+  //     await createBooking(bookingData);
+  //     toast.success('Booking successful! Enjoy your ride.');
+  //     // We'll create the 'My Bookings' page next
+  //     navigate('/my-bookings'); 
+  //   } catch (error: any) {
+  //     toast.error(error.response?.data?.message || 'Booking failed. Please try again.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   
   // Set today's date as the minimum for the date picker
   const today = new Date().toISOString().split('T')[0];
@@ -87,6 +89,73 @@ export default function BookingPage() {
       </div>
     );
   }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!vehicleId || !startDate || !endDate || totalPrice <= 0) {
+      toast.error('Please select valid start and end dates.');
+      return;
+    }
+
+    setIsProcessingPayment(true); // Show loading state on button
+
+    try {
+      // 1. Call backend to initiate payment and get access_key + bookingId
+      const initResponse = await initiatePaymentApi({
+        vehicleId,
+        startDate,
+        endDate,
+        totalPrice,
+      });
+
+      const { access_key, bookingId } = initResponse.data;
+
+      // --- 2. Initialize and open Easybuzz iframe ---
+      const easebuzzCheckout = new EasebuzzCheckout(
+        import.meta.env.VITE_EASEBUZZ_KEY, // Get Key from frontend env vars
+        import.meta.env.VITE_EASEBUZZ_ENV // Get Env ('test'/'prod') from frontend env vars
+      );
+
+      const options = {
+        access_key: access_key,
+        onResponse: async (response: any) => {
+          // --- 3. This callback runs after iframe closes ---
+          console.log("Easybuzz Response:", response);
+          setIsProcessingPayment(false); // Stop loading indicator
+
+          const paymentStatus = response.status === "success" ? 'success' : 'failure';
+          const easybuzzPaymentId = response.easebuzz_id || undefined;
+
+          try {
+            // --- 4. Call backend to confirm payment status ---
+            await confirmPaymentApi(bookingId, {
+               status: paymentStatus,
+               paymentId: easybuzzPaymentId
+            });
+
+            if (paymentStatus === 'success') {
+              toast.success("Payment Successful! Booking confirmed.");
+              navigate('/my-bookings');
+            } else {
+              toast.error(response.error_Message || "Payment Failed or Cancelled.");
+              // Keep user on booking page to potentially retry
+            }
+          } catch (confirmError) {
+             console.error("Error confirming payment:", confirmError);
+             toast.error("Error updating booking status. Please contact support.");
+          }
+        },
+        theme: "#2563EB" // Your primary color
+      };
+
+      easebuzzCheckout.initiatePayment(options);
+      // Note: Don't set setIsProcessingPayment(false) here, it happens in onResponse
+
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to initiate payment. Please try again.');
+      setIsProcessingPayment(false); // Stop loading on initiation failure
+    }
+  };
 
   return (
     <>
@@ -151,12 +220,12 @@ export default function BookingPage() {
 
               {/* Submit Button */}
               <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 disabled:bg-primary/50 transition-colors"
-              >
-                {isLoading ? 'Processing...' : 'Confirm Booking'}
-              </button>
+              type="submit"
+              disabled={isProcessingPayment} // Use the new loading state
+              className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 disabled:bg-primary/50 transition-colors"
+            >
+              {isProcessingPayment ? 'Processing...' : 'Proceed to Payment'}
+            </button>
             </form>
           </div>
         </div>
