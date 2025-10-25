@@ -64,7 +64,7 @@ bookingSchema.pre(/^find/, function (next) {
     select: 'name email', // Only select name and email of the user
   }).populate({
     path: 'vehicle',
-    select: 'make model pricePerDay', // Select key details of the vehicle
+    select: 'make model pricePerDay imageUrl', // Select key details of the vehicle
   });
   next();
 });
